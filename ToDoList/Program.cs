@@ -5,13 +5,27 @@
         static void Main(string[] args)
         {
             var todoList = new ToDoList();
-            todoList.AddToDo("Task #1");
-            todoList.AddToDo("Task #2");
-            todoList.AddToDo("Task #3");
-        }
-    }
 
-    public class ToDoList
+            while (true)
+            {
+                var inputKey = Console.ReadKey(true).Key;
+                switch (inputKey)
+                {
+                    case ConsoleKey.Q:
+                        return;
+                    case ConsoleKey.A:
+                        Console.WriteLine("Введите описание задачи:");
+                        var description = Console.ReadLine();
+                        todoList.AddToDo(description);
+                        break;
+                    default:
+                        break;
+                }
+                Console.Clear();
+            }
+        }
+
+        public class ToDoList
     {
         private List<ToDoItem> _todos;
 
@@ -34,5 +48,6 @@
         {
             Description = description;
         }
+    }
     }
 }
