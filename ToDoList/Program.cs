@@ -1,12 +1,13 @@
 ﻿
+
 namespace ToDoList
 {
-    internal class Program
+    internal partial class Program
     {
         static void Main(string[] args)
         {
             var todoList = new ToDoList();
-            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q };
+            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q , ConsoleKey.S};
             while (true)
             {
                 DrawMainMenu();
@@ -20,9 +21,10 @@ namespace ToDoList
                     case ConsoleKey.Q:
                         return;
                     case ConsoleKey.A:
-                        Console.WriteLine("Введите описание задачи:");
-                        var description = Console.ReadLine();
-                        todoList.AddToDo(description);
+                        AddCommandExecute(todoList);
+                        break;
+                    case ConsoleKey.S:
+                        ShowAllToDo(todoList);
                         break;
                     default:
                         break;
@@ -31,35 +33,35 @@ namespace ToDoList
             }
         }
 
+        private static void ShowAllToDo(ToDoList todoList)
+        {
+            if (todoList.IsEmpty)
+            {
+                Console.WriteLine("Список задач пуст!");
+                Console.ReadKey(true);
+                return;
+            }
+
+            foreach (var item in todoList.GetAllToDos())
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.ReadKey(true);
+        }
+
+        private static void AddCommandExecute(ToDoList todoList)
+        {
+            Console.WriteLine("Введите описание задачи:");
+            var description = Console.ReadLine();
+            todoList.AddToDo(description);
+        }
+
         private static void DrawMainMenu()
         {
             Console.WriteLine("Добавить задачу - A");
             Console.WriteLine("Выйти - Q");
-        }
-
-        public class ToDoList
-        {
-            private List<ToDoItem> _todos;
-
-            public ToDoList()
-            {
-                _todos = new List<ToDoItem>();
-            }
-
-            public void AddToDo(string description)
-            {
-                _todos.Add(new ToDoItem(description));
-            }
-        }
-
-        public class ToDoItem
-        {
-            public string Description { get; set; }
-
-            public ToDoItem(string description)
-            {
-                Description = description;
-            }
+            Console.WriteLine("Показать все задачи - S");
         }
     }
 }
