@@ -1,5 +1,7 @@
 ﻿
 
+using static ToDoList.Program;
+
 namespace ToDoList
 {
     internal partial class Program
@@ -7,6 +9,7 @@ namespace ToDoList
         public class ToDoList
         {
             private List<ToDoItem> _todos;
+            private int _selectedIndex = 0;
 
             public ToDoList()
             {
@@ -14,6 +17,24 @@ namespace ToDoList
             }
 
             public bool IsEmpty => _todos.Count == 0;
+            public int Count => _todos.Count;
+            public int SelectedIndex 
+            { 
+                get 
+                {
+                    return Count == 0 ? -1 : _selectedIndex;
+                }
+                set
+                {
+                    _selectedIndex = (Count + value % Count) % Count;
+                }
+            }
+
+            public ToDoItem this[int index]
+            {
+                get { return _todos[index]; }
+                set { _todos[index] = value; }
+            }
 
             public void AddToDo(string description)
             {

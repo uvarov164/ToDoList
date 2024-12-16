@@ -13,6 +13,11 @@ namespace ToDoList
                 Description = description;
             }
 
+            public void ChangeDescription(string newDescription)
+            {
+                Description = newDescription;
+            }
+
             public override string ToString()
             {
                 return Description;
