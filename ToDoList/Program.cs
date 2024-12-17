@@ -1,7 +1,4 @@
-﻿
-
-
-using static ToDoList.Program;
+﻿using static ToDoList.Program;
 
 namespace ToDoList
 {
