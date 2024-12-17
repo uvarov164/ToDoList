@@ -10,7 +10,13 @@ namespace ToDoList
         static void Main(string[] args)
         {
             var todoList = new ToDoList();
-            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q, ConsoleKey.S, ConsoleKey.E };
+            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q, ConsoleKey.S, ConsoleKey.E, ConsoleKey.R };
+
+            todoList.AddToDo("Task #1");
+            todoList.AddToDo("Task #2");
+            todoList.AddToDo("Task #3");
+            todoList.AddToDo("Task #4");
+
             while (true)
             {
                 DrawMainMenu();
@@ -32,10 +38,44 @@ namespace ToDoList
                     case ConsoleKey.E:
                         EditToDo(todoList);
                         break;
+                    case ConsoleKey.R:
+                        RemoveToDo(todoList);
+                        break;
                     default:
                         break;
                 }
                 Console.Clear();
+            }
+        }
+
+        private static void RemoveToDo(ToDoList todoList)
+        {
+            if (todoList.IsEmpty)
+            {
+                Console.WriteLine("Список дел пуст!");
+                Console.ReadKey(true);
+                return;
+            }
+
+            while (true)
+            {
+                DisplayWithHighlited(todoList);
+                var inputKey = Console.ReadKey(true).Key;
+                switch (inputKey)
+                {
+                    case ConsoleKey.UpArrow:
+                        todoList.SelectedIndex -= 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        todoList.SelectedIndex += 1;
+                        break;
+                    case ConsoleKey.Enter:
+                        todoList.Remove(todoList.SelectedIndex);
+                        return;
+                    default:
+                        break;
+                }
+                Console.SetCursorPosition(0, 0);
             }
         }
 
@@ -120,6 +160,7 @@ namespace ToDoList
             Console.WriteLine("Выйти - Q");
             Console.WriteLine("Показать все задачи - S");
             Console.WriteLine("Редактировать задачу - E");
+            Console.WriteLine("Удалить задачу - R");
         }
     }
 }

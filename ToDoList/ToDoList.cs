@@ -48,6 +48,11 @@ namespace ToDoList
                     yield return item;
                 }
             }
+
+            public void Remove(int index)
+            {
+                _todos.RemoveAt(index);
+            }
         }
     }
 }
