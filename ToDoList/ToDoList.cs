@@ -49,9 +49,14 @@ namespace ToDoList
                 }
             }
 
-            public void Remove(int index)
+            public void RemoveAt(int index)
             {
                 _todos.RemoveAt(index);
+            }
+
+            public void Remove(ToDoItem item)
+            {
+                _todos.Remove(item);
             }
         }
     }

@@ -50,42 +50,29 @@ namespace ToDoList
 
         private static void RemoveToDo(ToDoList todoList)
         {
-            if (todoList.IsEmpty)
-            {
-                Console.WriteLine("Список дел пуст!");
-                Console.ReadKey(true);
-                return;
-            }
-
-            while (true)
-            {
-                DisplayWithHighlited(todoList);
-                var inputKey = Console.ReadKey(true).Key;
-                switch (inputKey)
-                {
-                    case ConsoleKey.UpArrow:
-                        todoList.SelectedIndex -= 1;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        todoList.SelectedIndex += 1;
-                        break;
-                    case ConsoleKey.Enter:
-                        todoList.Remove(todoList.SelectedIndex);
-                        return;
-                    default:
-                        break;
-                }
-                Console.SetCursorPosition(0, 0);
-            }
+            var selectedItem = SelectToDo(todoList);
+            todoList.Remove(selectedItem);
         }
 
         private static void EditToDo(ToDoList todoList)
         {
+            var selectedItem = SelectToDo(todoList);
+
+            if (selectedItem == null)
+                return;
+
+            Console.Clear();
+            Console.WriteLine("Введите новое описание задачи:");
+            var newDesctription = Console.ReadLine();
+            selectedItem.ChangeDescription(newDesctription);
+        }
+
+        private static ToDoItem SelectToDo(ToDoList todoList)
+        {
             if (todoList.IsEmpty)
             {
-                Console.WriteLine("Список дел пуст!");
-                Console.ReadKey(true);
-                return;
+                DisplayEmptyToDoList();
+                return null;
             }
 
             while (true)
@@ -101,12 +88,7 @@ namespace ToDoList
                         todoList.SelectedIndex += 1;
                         break;
                     case ConsoleKey.Enter:
-                        Console.Clear();
-                        Console.WriteLine("Введите новое описание задачи:");
-                        var newDesctription = Console.ReadLine();
-                        var item = todoList[todoList.SelectedIndex];
-                        item.ChangeDescription(newDesctription);
-                        return;
+                        return todoList[todoList.SelectedIndex];
                     default:
                         break;
                 }
@@ -161,6 +143,12 @@ namespace ToDoList
             Console.WriteLine("Показать все задачи - S");
             Console.WriteLine("Редактировать задачу - E");
             Console.WriteLine("Удалить задачу - R");
+        }
+
+        private static void DisplayEmptyToDoList()
+        {
+            Console.WriteLine("Список задач пуст!");
+            Console.ReadKey(true);
         }
     }
 }
