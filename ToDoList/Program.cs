@@ -7,7 +7,10 @@ namespace ToDoList
         static void Main(string[] args)
         {
             var todoList = new ToDoList();
-            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q , ConsoleKey.S};
+            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q, ConsoleKey.S, ConsoleKey.E, ConsoleKey.R };
+
+            
+
             while (true)
             {
                 DrawMainMenu();
