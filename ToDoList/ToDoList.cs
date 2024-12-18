@@ -38,7 +38,7 @@ namespace ToDoList
 
             public void AddToDo(string description)
             {
-                _todos.Add(new ToDoItem(description));
+                _todos.Add(new ToDoItem(description, ToDoStatus.InProgress));
             }
 
             public IEnumerable<ToDoItem> GetAllToDos()

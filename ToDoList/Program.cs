@@ -7,12 +7,19 @@ namespace ToDoList
         static void Main(string[] args)
         {
             var todoList = new ToDoList();
-            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q, ConsoleKey.S, ConsoleKey.E, ConsoleKey.R };
+            var availableKeys = new List<ConsoleKey>() { ConsoleKey.A, ConsoleKey.Q, ConsoleKey.S, ConsoleKey.E, ConsoleKey.R, ConsoleKey.D };
+            var statusColor = new Dictionary<ToDoStatus, ConsoleColor>()
+            {
+                [ToDoStatus.InProgress] = ConsoleColor.Yellow,
+                [ToDoStatus.Complete] = ConsoleColor.Green
+            };
 
             todoList.AddToDo("Task #1");
             todoList.AddToDo("Task #2");
             todoList.AddToDo("Task #3");
             todoList.AddToDo("Task #4");
+
+            var ui = new UI(todoList, statusColor);
 
             while (true)
             {
@@ -30,13 +37,16 @@ namespace ToDoList
                         AddCommandExecute(todoList);
                         break;
                     case ConsoleKey.S:
-                        ShowAllToDo(todoList);
+                        ui.DisplayAllToDo();
                         break;
                     case ConsoleKey.E:
-                        EditToDo(todoList);
+                        EditToDo(todoList, ui);
                         break;
                     case ConsoleKey.R:
-                        RemoveToDo(todoList);
+                        RemoveToDo(todoList, ui);
+                        break;
+                    case ConsoleKey.D:
+                        FinishToDo(todoList, ui);
                         break;
                     default:
                         break;
@@ -45,15 +55,21 @@ namespace ToDoList
             }
         }
 
-        private static void RemoveToDo(ToDoList todoList)
+        private static void FinishToDo(ToDoList todoList, UI ui)
         {
-            var selectedItem = SelectToDo(todoList);
+            var selectedItem = ui.SelectToDo();
+            selectedItem.ChangeStatus(ToDoStatus.Complete);
+        }
+
+        private static void RemoveToDo(ToDoList todoList, UI ui)
+        {
+            var selectedItem = ui.SelectToDo();
             todoList.Remove(selectedItem);
         }
 
-        private static void EditToDo(ToDoList todoList)
+        private static void EditToDo(ToDoList todoList, UI ui)
         {
-            var selectedItem = SelectToDo(todoList);
+            var selectedItem = ui.SelectToDo();
 
             if (selectedItem == null)
                 return;
@@ -62,68 +78,6 @@ namespace ToDoList
             Console.WriteLine("Введите новое описание задачи:");
             var newDesctription = Console.ReadLine();
             selectedItem.ChangeDescription(newDesctription);
-        }
-
-        private static ToDoItem SelectToDo(ToDoList todoList)
-        {
-            if (todoList.IsEmpty)
-            {
-                DisplayEmptyToDoList();
-                return null;
-            }
-
-            while (true)
-            {
-                DisplayWithHighlited(todoList);
-                var inputKey = Console.ReadKey(true).Key;
-                switch (inputKey)
-                {
-                    case ConsoleKey.UpArrow:
-                        todoList.SelectedIndex -= 1;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        todoList.SelectedIndex += 1;
-                        break;
-                    case ConsoleKey.Enter:
-                        return todoList[todoList.SelectedIndex];
-                    default:
-                        break;
-                }
-                Console.SetCursorPosition(0, 0);
-            }
-        }
-
-        private static void DisplayWithHighlited(ToDoList todoList)
-        {
-            for (int i = 0; i < todoList.Count; i++)
-            {
-                if (i == todoList.SelectedIndex)
-                {
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine(todoList[i]);
-                    Console.ResetColor();
-                    continue;
-                }
-                Console.WriteLine(todoList[i]);
-            }
-        }
-
-        private static void ShowAllToDo(ToDoList todoList)
-        {
-            if (todoList.IsEmpty)
-            {
-                Console.WriteLine("Список задач пуст!");
-                Console.ReadKey(true);
-                return;
-            }
-
-            foreach (var item in todoList.GetAllToDos())
-            {
-                Console.WriteLine(item);
-            }
-
-            Console.ReadKey(true);
         }
 
         private static void AddCommandExecute(ToDoList todoList)
@@ -140,12 +94,10 @@ namespace ToDoList
             Console.WriteLine("Показать все задачи - S");
             Console.WriteLine("Редактировать задачу - E");
             Console.WriteLine("Удалить задачу - R");
-        }
-
-        private static void DisplayEmptyToDoList()
-        {
-            Console.WriteLine("Список задач пуст!");
-            Console.ReadKey(true);
+            Console.WriteLine("Отметить задачу как выполненную - D");
         }
     }
+
+    
 }
+
